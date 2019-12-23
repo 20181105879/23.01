@@ -1,60 +1,111 @@
 #include <iostream>
+#include <queue>
+#include <stack>
 using namespace std;
-long s[100000];
-long size=0;
-long * insert(long *s,long t)
+int s1[15];
+int s2[15];
+int s[15][15];
+int  n,m;
+void bfs(int start)
 {
-	long parent,i;
-	i=size;
-	parent=size/2;
-	for( i=size;(t<s[i/2] && i>1);i=i/2)
+	queue<int> q;
+	int t;
+	q.push(start);
+	s1[start]=1;
+	cout<<"{ ";
+	t=q.front();
+	while(!q.empty())
 	{
-		parent=i/2;
-		s[i]=s[parent];
+		cout<<q.front()<<" ";
+		for(int i=0;i<n;i++)
+		{
+			if(s[q.front()][i]==1 && s1[i]==0)
+			{
+				q.push(i);
+				s1[i]=1;
+			}
+
+		}
+		q.pop();
+		t=q.front();
 	}
-	s[i]=t;
-//	for(i=0;i<size;i++)
-//	{
-//		cout<<s[i];
-//	}
-//	cout<<endl;
-	return  s;
+	cout<<"}"<<endl;
+
+}
+void dfs(int start)
+{
+	stack<int> ss;
+	ss.push(start);
+	s2[start]=1;
+    cout<<"{ ";
+    cout<<ss.top()<<" ";
+    int t;
+	t=ss.top();
+    bool is_push ;//= false;
+	while(!ss.empty())
+	{
+//		cout<<ss.top()<<" ";
+        is_push = false;
+		for(int i=0;i<n;i++)
+		{
+			if(s[t][i]==1 && s2[i]==0)
+			{
+				ss.push(i);
+				s2[i]=1;
+				cout<<i<<" ";
+				t=ss.top();
+				is_push = true;	
+				break;
+			}
+
+		}
+		if(!is_push)
+		{
+			
+			ss.pop();
+			if(ss.empty())
+			{
+				break;
+			}
+			t=ss.top();
+		}
 		
+	}
+	cout<<"}"<<endl;
 }
 int main()
 {
-	
-	s[0]=-10000000;
-	long n,m,t;
+
 	cin>>n>>m;
-	for(long i=1;i<=n;i++)
+	for(int i=0;i<m;i++)
 	{
-	   cin>>t;
-	   size++;
-	   insert(s,t);
+		int r,l;
+		cin>>r>>l;
+		s[r][l]=1;
+		s[l][r]=1;	
 	}
-	long h;
-	for(long i=0;i<m;i++)
+		for(int i=0;i<n;i++)
 	{
-		cin>>h;
-		cout<<s[h];
-		for(h=h/2;h>0;h=h/2)
+		if(s2[i]==1)
 		{
-			cout<<" "<<s[h];
+			continue;
 		}
-		cout<<endl;
-		
-		
+		else
+		{
+			dfs(i);
+		}
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	return 0;
+	for(int i=0;i<n;i++)
+	{
+		if(s1[i]==1)
+		{
+			continue;
+		}
+		else
+		{
+			bfs(i);
+		}
+	}
+	return  0;
  } 
+
